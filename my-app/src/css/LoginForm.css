@@ -1,0 +1,52 @@
+/* LoginForm.css */
+
+.login-form {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  flex-direction: column; /* Align children vertically */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.login-form h2 {
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.welcome-message {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+/* You can add more styles as needed */
