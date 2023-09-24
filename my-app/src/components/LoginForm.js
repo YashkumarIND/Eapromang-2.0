@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import '../css/LoginForm.css';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const API_BASE_URL = 'http://localhost:3001/api/auth'; // Adjust the URL to match your server
+const API_BASE_URL = 'http://localhost:3001/api/auth';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -16,17 +18,23 @@ const LoginForm = () => {
         password,
       });
 
-      // Assuming your server returns a JWT upon successful login
       const { token } = response.data;
-
-      // Store the token in localStorage or a secure storage mechanism
       localStorage.setItem('authToken', token);
+
+      // Set the email state
+      setEmail(email);
 
       // Update the state to indicate authentication
       setIsAuthenticated(true);
+
+      // Redirect to the homepage
+      navigate('/home'); // Redirect to "/home" route
     } catch (error) {
-      // Handle login error (e.g., display an error message)
-      console.error('Login failed:', error);
+      if (error.response && error.response.status === 401) {
+        console.error('Login failed: Invalid email or password');
+      } else {
+        console.error('Login failed:', error.message);
+      }
     }
   };
 

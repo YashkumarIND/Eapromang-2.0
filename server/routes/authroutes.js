@@ -9,28 +9,38 @@ const tokenExpiration = process.env.JWT_EXPIRATION;
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
-  // Find the user in the database
-  let user = await User.findOne({ email });
+  try {
+    // Find the user in the database
+    let user = await User.findOne({ email });
 
-  // If the user doesn't exist, respond with an error
-  if (!user) {
-    return res.status(401).json({ message: 'User not found' });
-  }
+    // If the user doesn't exist, create a new user
+    if (!user) {
+      // Hash the password
+      const hashedPassword = bcrypt.hashSync(password, 10);
 
-  // Verify the password
-  if (bcrypt.compareSync(password, user.password)) {
-    // Passwords match, generate a JWT
-    const token = jwt.sign({ userId: user._id }, secretKey, {
-      expiresIn: tokenExpiration,
-    });
+      // Create a new user
+      user = await User.create({
+        email,
+        password: hashedPassword,
+      });
+    }
 
-    // Logging for debugging
-    console.log('Generated JWT:', token);
+    // Verify the password
+    if (bcrypt.compareSync(password, user.password)) {
+      // Passwords match, generate a JWT
+      const token = jwt.sign({ userId: user._id }, secretKey, {
+        expiresIn: tokenExpiration,
+      });
 
-    // Send the JWT as a response to log in the user
-    return res.status(200).json({ token });
-  } else {
-    return res.status(401).json({ message: 'Authentication failed' });
+      // Send the JWT as a response to log in the user
+      return res.status(200).json({ token });
+    } else {
+      // If the password doesn't match, respond with an authentication failed message
+      return res.status(401).json({ message: 'Authentication failed' });
+    }
+  } catch (error) {
+    console.error('Login failed:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
