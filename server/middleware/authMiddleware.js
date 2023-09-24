@@ -1,19 +1,25 @@
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET;
+const User = require('../models/User'); // Import the User model
 
-const protectRoute = (req, res, next) => {
+const protectRoute = async (req, res, next) => {
   const token = req.header('Authorization');
 
   if (!token) {
     return res.status(401).json({ message: 'Authentication required' });
   }
 
-  console.log('Received token:', token);
-
   try {
     const decoded = jwt.verify(token, secretKey);
-    console.log('Decoded token:', decoded);
     req.user = decoded; // Store user data in the request
+
+    // Check if the user exists
+    const user = await User.findById(req.user.userId);
+    
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
     next(); // Continue to the protected route
   } catch (error) {
     console.error('Token verification failed:', error);
@@ -21,7 +27,4 @@ const protectRoute = (req, res, next) => {
   }
 };
 
-
-
 module.exports = protectRoute;
-
