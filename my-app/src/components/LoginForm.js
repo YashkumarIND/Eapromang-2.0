@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = 'http://localhost:3001/api/auth';
 
-const LoginForm = () => {
+const LoginForm = ({ setUserEmail }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,6 +26,9 @@ const LoginForm = () => {
 
       // Update the state to indicate authentication
       setIsAuthenticated(true);
+
+      // Call the setUserEmail function to set the user's email
+      setUserEmail(email);
 
       // Redirect to the homepage
       navigate('/home'); // Redirect to "/home" route

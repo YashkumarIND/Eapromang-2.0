@@ -1,7 +1,6 @@
 import React from 'react';
 
 const HomePage = ({ email }) => {
-  
   return (
     <div className="homepage">
       <nav className="navbar" style={{ backgroundColor: '#333', color: 'white' }}>
