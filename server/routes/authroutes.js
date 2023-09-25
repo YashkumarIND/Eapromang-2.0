@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Teams = require('../models/Teams');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const secretKey = process.env.JWT_SECRET;
@@ -43,5 +44,36 @@ router.post('/login', async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+
+router.post('/teams', async (req, res) => {
+  const { projectName, teamMembers, creator } = req.body;
+
+  try {
+    // Find the team in the database
+    let team = await Teams.findOne({ projectName });
+
+    // If the team doesn't exist, create a new team
+    if (!team) {
+      // Create a new team
+      team = new Teams({
+        projectName,
+        teamMembers, // Assuming teamMembers is an array of strings
+        creator, // Assuming creator is an array of strings
+      });
+
+      // Save the new team to the database
+      await team.save();
+
+      return res.status(201).json({ message: 'Team created successfully' });
+    } else {
+      return res.status(400).json({ message: 'Team with this project name already exists' });
+    }
+  } catch (error) {
+    console.error('Team creation failed:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 module.exports = router;

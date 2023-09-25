@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoginForm from './components/LoginForm';
 import HomePage from './components/HomePage';
+import CreateTeamForm from './components/CreateTeamForm'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -10,8 +11,9 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/home" element={<HomePage email={userEmail} />} />
-          <Route path="/" element={<LoginForm setUserEmail={setUserEmail} />} />
+          <Route path="/create-teams" element={<CreateTeamForm creatorEmail={userEmail} />} exact />
+          <Route path="/home" element={<HomePage email={userEmail} />} exact />
+          <Route path="/" element={<LoginForm setUserEmail={setUserEmail} />} exact />
         </Routes>
       </div>
     </Router>

@@ -1,18 +1,20 @@
 import React from 'react';
+import '../css/HomePage.css';
+import { Link } from 'react-router-dom';
 
 const HomePage = ({ email }) => {
   return (
-    <div className="homepage">
-      <nav className="navbar" style={{ backgroundColor: '#333', color: 'white' }}>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          <li><a href="/teams" style={{ textDecoration: 'none', color: 'white' }}>Teams</a></li>
-          <li><a href="/logout" style={{ textDecoration: 'none', color: 'white' }}>Log Out</a></li>
+    <div className="homepage-container">
+      <nav className="sidebar">
+        <ul>
+          <li><Link to="/create-teams">Create Teams</Link></li>
+          <li><Link to="/logout">Log Out</Link></li>
         </ul>
       </nav>
       <div className="content">
         <h1>Welcome to the Homepage!</h1>
         <p>This is a simple homepage created using React.</p>
-        <p>Welcome, {email}!</p> {/* Display the user's email */}
+        <p>Welcome, {email}!</p>
       </div>
     </div>
   );
