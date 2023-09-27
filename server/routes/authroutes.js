@@ -76,4 +76,27 @@ router.post('/teams', async (req, res) => {
 });
 
 
+router.get('/teams-by-email', async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    // Find teams where the email is the creator
+    const creatorTeams = await Teams.find({ creator: email });
+
+    // Find teams where the email is a team member
+    const memberTeams = await Teams.find({ teamMembers: email });
+
+    // Extract team names from the results
+    const creatorTeamNames = creatorTeams.map((team) => team.projectName);
+    const memberTeamNames = memberTeams.map((team) => team.projectName);
+
+    return res.status(200).json({ creatorTeams: creatorTeamNames, memberTeams: memberTeamNames });
+  } catch (error) {
+    console.error('Error fetching teams by email:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
 module.exports = router;

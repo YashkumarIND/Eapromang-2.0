@@ -30,3 +30,27 @@
     padding: 20px;
   }
   
+  /* HomePage.css */
+
+/* Your existing styles for the homepage */
+
+.team-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.team-box {
+  padding: 20px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.creator {
+  background-color: orange;
+}
+
+.member {
+  background-color: green;
+}
