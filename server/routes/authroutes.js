@@ -59,7 +59,7 @@ router.post('/teams', async (req, res) => {
       team = new Teams({
         projectName,
         teamMembers, // Assuming teamMembers is an array of strings
-        creator, // Assuming creator is an array of strings
+        creator,
       });
 
       // Save the new team to the database
@@ -76,7 +76,7 @@ router.post('/teams', async (req, res) => {
 });
 
 
-router.get('/teams-by-email', async (req, res) => {
+router.get('/teams-by-email/:email', async (req, res) => {
   const { email } = req.params;
 
   try {
@@ -96,7 +96,5 @@ router.get('/teams-by-email', async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-
 
 module.exports = router;

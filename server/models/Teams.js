@@ -15,7 +15,6 @@ const teamsSchema = new mongoose.Schema({
   creator: {
     type:String,
     required:true,
-    unique:false,
     trim:true,
   }
 });
