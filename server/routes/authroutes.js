@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/teams', async (req, res) => {
-  const { projectName, teamMembers, creator } = req.body;
+  const { projectName, projectDescription, teamMembers, creator } = req.body;
 
   try {
     // Find the team in the database
@@ -58,6 +58,7 @@ router.post('/teams', async (req, res) => {
       // Create a new team
       team = new Teams({
         projectName,
+        projectDescription, // Add projectDescription
         teamMembers, // Assuming teamMembers is an array of strings
         creator,
       });
@@ -74,6 +75,7 @@ router.post('/teams', async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 
 router.get('/teams-by-email/:email', async (req, res) => {
@@ -96,5 +98,67 @@ router.get('/teams-by-email/:email', async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+
+router.get('/teams/:projectName/tasks', async (req, res) => {
+  const { projectName } = req.params;
+  const { assignee } = req.query;
+
+  try {
+    // Find the team by project name
+    const project = await Teams.findOne({ projectName: projectName });
+
+    if (!project) {
+      return res.status(404).json({ message: 'Team not found' });
+    }
+
+    // Filter tasks by assignee if the 'assignee' query parameter is provided
+    let tasks = project.tasks || [];
+    if (assignee) {
+      tasks = tasks.filter((task) => task.assignees.includes(assignee));
+    }
+
+    return res.status(200).json({ tasks });
+  } catch (error) {
+    console.error('Error fetching tasks for team:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+router.post('/teams/:projectName/tasks', async (req, res) => {
+  const { projectName } = req.params;
+  const { description, dueDate, assignees } = req.body; // Add 'assignees' to the request body
+
+  try {
+    // Find the team by project name
+    const project = await Teams.findOne({ projectName: projectName });
+
+    if (!project) {
+      return res.status(404).json({ message: 'Team not found' });
+    }
+
+    // Create a new task object with assignees
+    const task = {
+      description: description,
+      dueDate: dueDate,
+      assignees: assignees, // Add the 'assignees' field
+    };
+
+    // Push the new task to the 'tasks' array in the team document
+    project.tasks.push(task);
+
+    // Save the updated team document
+    await project.save();
+
+    return res.status(201).json({ message: 'Task created successfully', task });
+  } catch (error) {
+    console.error('Error creating task for team:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
 
 module.exports = router;
